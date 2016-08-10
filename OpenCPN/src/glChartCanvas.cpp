@@ -1464,7 +1464,7 @@ void glChartCanvas::OnPaint( wxPaintEvent &event )
     //      Recursion test, sometimes seen on GTK systems when wxBusyCursor is activated
     if( m_in_glpaint ) return;
     m_in_glpaint++;
-   Render();
+    Render();
     m_in_glpaint--;
 
 }

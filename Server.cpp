@@ -1,9 +1,7 @@
-﻿#include <websocketpp/config/asio_no_tls.hpp>
+#include <websocketpp/config/asio_no_tls.hpp>
 
 #include <websocketpp/server.hpp>
-#include <rapidjson/document.h>
-#include "rapidjson/prettywriter.h"
-#include "rapidjson/filereadstream.h"
+
 #include <iostream>
 
 typedef websocketpp::server<websocketpp::config::asio> server;
@@ -15,23 +13,13 @@ using websocketpp::lib::bind;
 // pull out the type of messages sent by our config
 typedef server::message_ptr message_ptr;
 
-rapidjson::Document document;
-FILE * pFile = fopen("test.json", "r");
-char buffer[65536];
-rapidjson::FileReadStream is(pFile, buffer, sizeof(buffer));
 
 
-const char json[] = " { \"latitude\" : \"6.97037\", \"Ship_name\" : \"Y101                \" , \"longitute\" : \"60.839915\" } ";
+//const char json[] = " { \"latitude\" : \"6.97037\", \"Ship_name\" : \"Y101                \" , \"longitute\" : \"60.839915\" } ";
 
 // Define a callback to handle incoming messages
 void on_message(server* s, websocketpp::connection_hdl hdl, message_ptr msg) {
-
-	document.Parse(json);
-
-	rapidjson::StringBuffer sb;
-	rapidjson::PrettyWriter<rapidjson::StringBuffer> writer(sb);
-	document.Accept(writer);    // Accept() traverses the DOM and generates Handler events.
-	//puts(sb.GetString());
+	
 
     std::cout << "on_message called with hdl: " << hdl.lock().get()
               << " and message: " << msg->get_payload()

@@ -1211,6 +1211,8 @@ bool MyApp::OnInit()
     wxString imsg = date_now.FormatISODate();
     wxLogMessage( imsg );
 
+
+
     imsg = _T(" ------- Starting OpenCPN -------");
     wxLogMessage( imsg );
 
@@ -1717,7 +1719,7 @@ bool MyApp::OnInit()
     //wxString myframe_window_title = wxT("OpenCPN ") + str_version_major + wxT(".")
     //	+ str_version_minor + wxT(".") + str_version_patch; //Gunther
     
-    wxString myframe_window_title = wxT(" SIYARA - 2D AIS Data Viewer ");
+    wxString myframe_window_title = wxT(" VTMS - 2D AIS Data Viewer ");
     
     //-wrc-----------------
 
@@ -2125,7 +2127,46 @@ extern ocpnGLOptions g_GLOptions;
 #ifdef __OCPN__ANDROID__
     androidHideBusyIcon();
 #endif    
-    
+	//------------------------------------------------
+	/*
+	Created by Chamal Perera
+	*/
+	if (!connectedToDB)
+	{
+		wxString ais_database_ip;
+		//ais_database_ip = m_data_source_string.Mid(7);   // extract the ais_database_ip IP
+		ais_database_ip = _T("192.248.22.121");
+
+		AIS_DB_Thread *database_User = NULL;
+		database_User = new AIS_DB_Thread(g_pAIS, ais_database_ip);
+
+		if (connectedToDB)
+		{
+			database_User->Run();
+		}
+		else
+		{
+			delete database_User;
+		}
+
+		//wxLogMessage(_T("Back to main thread"));
+
+	}
+	//------------------------------------------------
+	//wxString dire = g_Platform->GetSharedDataDir() + _("\Charts");
+	//AddChartDirectory(dire);
+	//wxFileName dirname = wxFileName(dire);
+	//ArrayOfCDI NewDirArray;
+	////wxLogMessage("DIR IS "+ g_Platform->GetSharedDataDir());
+	////dirname.MakeRelativeTo(g_Platform->GetHomeDir());
+	//pInit_Chart_Dir->Empty();
+	//if (!g_bportable)
+	//	pInit_Chart_Dir->Append(dirname.GetFullPath());
+	//ChartDirInfo cdi;
+	//cdi.fullpath = dirname.GetFullPath();
+	//cdi.magic_number = ChartData->GetMagicNumberCached(dirname.GetFullPath());
+	//NewDirArray.Add(cdi);
+	//ProcessOptionsDialog(1, &NewDirArray);
     return TRUE;
 }
 
@@ -2442,6 +2483,8 @@ MyFrame::MyFrame( wxFrame *frame, const wxString& title, const wxPoint& pos, con
     m_BellsToPlay = 0;
     
     m_resizeTimer.SetOwner(this, RESIZE_TIMER);
+
+	
 }
 
 MyFrame::~MyFrame()
@@ -2686,7 +2729,7 @@ void MyFrame::OnItemChangedTypeFilter(wxCommandEvent& event)
     else{
         AIS_Query = _("select * from decoded_ais_data where last_received_date = curdate() and last_received_time > (curtime() - 003000)");
     }
-    
+	
 }
 //-Filter by ship type combobox--------
 
@@ -2768,12 +2811,12 @@ ocpnToolBarSimple *MyFrame::CreateAToolbar()
             style->GetToolIcon( _T("route"), TOOLICON_NORMAL ),
             style->GetToolIcon( _T("route"), TOOLICON_TOGGLED ), wxITEM_CHECK, tipString );
 
-    CheckAndAddPlugInTool( tb );
+    /*CheckAndAddPlugInTool( tb );
     tipString = wxString( _("Auto Follow") ) << _T(" (F2)");
     if( _toolbarConfigMenuUtil( ID_FOLLOW, tipString ) )
         tb->AddTool( ID_FOLLOW, _T("follow"),
             style->GetToolIcon( _T("follow"), TOOLICON_NORMAL ),
-            style->GetToolIcon( _T("follow"), TOOLICON_TOGGLED ), wxITEM_CHECK, tipString );
+            style->GetToolIcon( _T("follow"), TOOLICON_TOGGLED ), wxITEM_CHECK, tipString );*/
 
     CheckAndAddPlugInTool( tb );
     tipString = _("Options");
@@ -2781,12 +2824,12 @@ ocpnToolBarSimple *MyFrame::CreateAToolbar()
         tb->AddTool( ID_SETTINGS, _T("settings"),
             style->GetToolIcon( _T("settings"), TOOLICON_NORMAL ), tipString, wxITEM_NORMAL );
 
-    CheckAndAddPlugInTool( tb );
+    /*CheckAndAddPlugInTool( tb );
     tipString = wxString( _("Show ENC Text") ) << _T(" (T)");
     if( _toolbarConfigMenuUtil( ID_ENC_TEXT, tipString ) )
         tb->AddTool( ID_ENC_TEXT, _T("text"),
             style->GetToolIcon( _T("text"), TOOLICON_NORMAL ),
-            style->GetToolIcon( _T("text"), TOOLICON_TOGGLED ), wxITEM_CHECK, tipString );
+            style->GetToolIcon( _T("text"), TOOLICON_TOGGLED ), wxITEM_CHECK, tipString );*/
     
     //-resetview-----------------
     /*
@@ -2796,19 +2839,19 @@ ocpnToolBarSimple *MyFrame::CreateAToolbar()
     CheckAndAddPlugInTool(tb);
     tipString = wxString(_("Reset View")) << _T(" (T)");
     if (_toolbarConfigMenuUtil(ID_RESET_VIEW, tipString))
-        tb->AddTool(ID_RESET_VIEW, _T("resetview"),
-                    style->GetToolIcon(_T("resetview"), TOOLICON_NORMAL), tipString, wxITEM_NORMAL);
+        tb->AddTool(ID_RESET_VIEW, _T("mob_btn"),
+                    style->GetToolIcon(_T("mob_btn"), TOOLICON_NORMAL), tipString, wxITEM_NORMAL);
     //-resetview-----------------
     
-    m_pAISTool = NULL;
-    CheckAndAddPlugInTool( tb );
-    tipString = _("Hide AIS Targets");          // inital state is on
-    if( _toolbarConfigMenuUtil( ID_AIS, tipString ) )
-        m_pAISTool = tb->AddTool( ID_AIS, _T("AIS"), style->GetToolIcon( _T("AIS"), TOOLICON_NORMAL ),
-                                  style->GetToolIcon( _T("AIS"), TOOLICON_DISABLED ),
-                                  wxITEM_NORMAL, tipString );
+    //m_pAISTool = NULL;
+    //CheckAndAddPlugInTool( tb );
+    //tipString = _("Hide AIS Targets");          // inital state is on
+    //if( _toolbarConfigMenuUtil( ID_AIS, tipString ) )
+    //    m_pAISTool = tb->AddTool( ID_AIS, _T("AIS"), style->GetToolIcon( _T("AIS"), TOOLICON_NORMAL ),
+    //                              style->GetToolIcon( _T("AIS"), TOOLICON_DISABLED ),
+    //                              wxITEM_NORMAL, tipString );
 
-    CheckAndAddPlugInTool( tb );
+    /*CheckAndAddPlugInTool( tb );
     tipString = _("Show Currents");
     if( _toolbarConfigMenuUtil( ID_CURRENT, tipString ) )
         tb->AddTool( ID_CURRENT, _T("current"),
@@ -2818,7 +2861,7 @@ ocpnToolBarSimple *MyFrame::CreateAToolbar()
     tipString = _("Show Tides");
     if( _toolbarConfigMenuUtil( ID_TIDE, tipString ) )
         tb->AddTool( ID_TIDE, _T("tide"),
-            style->GetToolIcon( _T("tide"), TOOLICON_NORMAL ), tipString, wxITEM_CHECK );
+            style->GetToolIcon( _T("tide"), TOOLICON_NORMAL ), tipString, wxITEM_CHECK );*/
 
     CheckAndAddPlugInTool( tb );
     tipString = _("Print Chart");
@@ -2833,37 +2876,37 @@ ocpnToolBarSimple *MyFrame::CreateAToolbar()
             _T("route_manager"), style->GetToolIcon( _T("route_manager"), TOOLICON_NORMAL ),
             tipString, wxITEM_NORMAL );
 
-    CheckAndAddPlugInTool( tb );
+    /*CheckAndAddPlugInTool( tb );
     tipString = _("Enable Tracking");
     if( _toolbarConfigMenuUtil( ID_TRACK, tipString ) )
         tb->AddTool( ID_TRACK, _T("track"),
             style->GetToolIcon( _T("track"), TOOLICON_NORMAL ),
-            style->GetToolIcon( _T("track"), TOOLICON_TOGGLED ), wxITEM_CHECK, tipString );
+            style->GetToolIcon( _T("track"), TOOLICON_TOGGLED ), wxITEM_CHECK, tipString );*/
 
-    CheckAndAddPlugInTool( tb );
-    tipString = wxString( _("Change Color Scheme") ) << _T(" (F5)");
-    if( _toolbarConfigMenuUtil( ID_COLSCHEME, tipString ) ){
-        tb->AddTool( ID_COLSCHEME,
-            _T("colorscheme"), style->GetToolIcon( _T("colorscheme"), TOOLICON_NORMAL ),
-            tipString, wxITEM_NORMAL );
-        tb->SetToolTooltipHiViz( ID_COLSCHEME, true );  // cause the Tooltip to always be visible, whatever
-                                                        //  the colorscheme
-    }
+    //CheckAndAddPlugInTool( tb );
+    //tipString = wxString( _("Change Color Scheme") ) << _T(" (F5)");
+    //if( _toolbarConfigMenuUtil( ID_COLSCHEME, tipString ) ){
+    //    tb->AddTool( ID_COLSCHEME,
+    //        _T("colorscheme"), style->GetToolIcon( _T("colorscheme"), TOOLICON_NORMAL ),
+    //        tipString, wxITEM_NORMAL );
+    //    tb->SetToolTooltipHiViz( ID_COLSCHEME, true );  // cause the Tooltip to always be visible, whatever
+    //                                                    //  the colorscheme
+    //}
 
-    CheckAndAddPlugInTool( tb );
-    tipString = _("About OpenCPN");
-    if( _toolbarConfigMenuUtil( ID_ABOUT, tipString ) )
-        tb->AddTool( ID_ABOUT, _T("help"),
-            style->GetToolIcon( _T("help"), TOOLICON_NORMAL ), tipString, wxITEM_NORMAL );
+    //CheckAndAddPlugInTool( tb );
+    //tipString = _("About OpenCPN");
+    //if( _toolbarConfigMenuUtil( ID_ABOUT, tipString ) )
+    //    tb->AddTool( ID_ABOUT, _T("help"),
+    //        style->GetToolIcon( _T("help"), TOOLICON_NORMAL ), tipString, wxITEM_NORMAL );
 
-    //      Add any PlugIn toolbar tools that request default positioning
-    AddDefaultPositionPlugInTools( tb );
+    ////      Add any PlugIn toolbar tools that request default positioning
+    //AddDefaultPositionPlugInTools( tb );
 
-    //  And finally add the MOB tool
-    tipString = wxString( _("Drop MOB Marker") ) << _(" (Ctrl-Space)");
-    if( _toolbarConfigMenuUtil( ID_MOB, tipString ) )
-        tb->AddTool( ID_MOB, _T("mob_btn"),
-                     style->GetToolIcon( _T("mob_btn"), TOOLICON_NORMAL ), tipString, wxITEM_NORMAL );
+    ////  And finally add the MOB tool
+    //tipString = wxString( _("Drop MOB Marker") ) << _(" (Ctrl-Space)");
+    //if( _toolbarConfigMenuUtil( ID_MOB, tipString ) )
+    //    tb->AddTool( ID_MOB, _T("mob_btn"),
+    //                 style->GetToolIcon( _T("mob_btn"), TOOLICON_NORMAL ), tipString, wxITEM_NORMAL );
 
 
 // Realize() the toolbar
@@ -6330,8 +6373,8 @@ void MyFrame::OnFrameTimer1( wxTimerEvent& event )
     } else
         AnchorAlertOn2 = false;
 
-    if( (pAnchorWatchPoint1 || pAnchorWatchPoint2) && !bGPSValid )
-        AnchorAlertOn1 = true;
+    /*if( (pAnchorWatchPoint1 || pAnchorWatchPoint2) && !bGPSValid )
+        AnchorAlertOn1 = true;*/
 
 //  Send current nav status data to log file on every half hour   // pjotrc 2010.02.09
 

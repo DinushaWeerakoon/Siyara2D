@@ -3086,7 +3086,7 @@ void options::CreateControls()
 	m_topImgList->Add(style->GetIcon(_T("Connections")));
 	m_topImgList->Add(style->GetIcon(_T("Ship")));
 	m_topImgList->Add(style->GetIcon(_T("UI")));
-	m_topImgList->Add(style->GetIcon(_T("Plugins")));
+	//m_topImgList->Add(style->GetIcon(_T("Plugins")));
 #else
 	wxBitmap bmp;
 	wxImage img;
@@ -3164,14 +3164,15 @@ void options::CreateControls()
 	m_pageUI = CreatePanel(_("User Interface"));
 	CreatePanel_UI(m_pageUI, border_size, group_item_spacing, m_small_button_size);
 
-	m_pagePlugins = CreatePanel(_("Plugins"));
-	itemPanelPlugins = AddPage(m_pagePlugins, _("Plugins"));
+	//m_pagePlugins = CreatePanel(_("Plugins"));
+	//
+	//itemPanelPlugins = AddPage(m_pagePlugins, _("Plugins"));
+	//
+	//itemBoxSizerPanelPlugins = new wxBoxSizer(wxVERTICAL);
+	//itemPanelPlugins->SetSizer(itemBoxSizerPanelPlugins);
 
-	itemBoxSizerPanelPlugins = new wxBoxSizer(wxVERTICAL);
-	itemPanelPlugins->SetSizer(itemBoxSizerPanelPlugins);
-
-	//      PlugIns can add panels, too
-	if (g_pi_manager) g_pi_manager->NotifySetupOptions();
+	////      PlugIns can add panels, too
+	//if (g_pi_manager) g_pi_manager->NotifySetupOptions();
 
 	SetColorScheme((ColorScheme)0);
 
@@ -3511,7 +3512,7 @@ void options::CreateControls()
 	HistoryBoxSizer->Add(resetButtonHistory, 0, wxALIGN_CENTER_HORIZONTAL, 2);
 
 	//-History--------------------
-
+	//DeletePage(itemPanelPlugins);
 }
 
 void options::SetInitialPage(int page_sel)
@@ -4165,7 +4166,6 @@ done:
 void options::AddChartDir(wxString &dir)
 {
 	wxFileName dirname = wxFileName(dir);
-
 	pInit_Chart_Dir->Empty();
 	if (!g_bportable)
 		pInit_Chart_Dir->Append(dirname.GetPath());

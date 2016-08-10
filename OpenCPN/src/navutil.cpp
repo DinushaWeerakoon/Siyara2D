@@ -1202,7 +1202,11 @@ int MyConfig::LoadMyConfig()
     Read( _T ( "DebugGDAL" ), &g_bGDAL_Debug, 0 );
     Read( _T ( "DebugNMEA" ), &g_nNMEADebug, 0 );
     Read( _T ( "DebugOpenGL" ), &g_bDebugOGL, 0 );
-    Read( _T ( "AnchorWatchDefault" ), &g_nAWDefault, 50 );
+
+	//-Modified by Chamal Perera------
+    Read( _T ( "AnchorWatchDefault" ), &g_nAWDefault, 150 );//Anchorwatch radius.
+	//--------------------------------
+
     Read( _T ( "AnchorWatchMax" ), &g_nAWMax, 1852 );
     Read( _T ( "GPSDogTimeout" ), &gps_watchdog_timeout_ticks, GPS_TIMEOUT_SECONDS );
     Read( _T ( "DebugCM93" ), &g_bDebugCM93, 0 );

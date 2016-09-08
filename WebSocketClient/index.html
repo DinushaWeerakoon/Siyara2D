@@ -1,0 +1,160 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+  <title>textured_orbs</title>
+  <meta name="description" content="website description" />
+  <meta name="keywords" content="website keywords, website keywords" />
+  <meta http-equiv="content-type" content="text/html; charset=windows-1252" />
+  <link rel="stylesheet" type="text/css" href="style/style.css" />
+</head>
+
+<body>
+  <div id="main">
+    <div id="header">
+      <div id="logo">
+        <div id="logo_text">
+          <!-- class="logo_colour", allows you to change the colour of the text -->
+          <h1><a href="index.html">Siyara Vessel Traffic Monitoring System</a></h1>
+          <h2>2D</h2>
+        </div>
+      </div>
+    
+    </div>
+    <div id="content_header"></div>
+    <div id="site_content">
+     
+	  
+      
+	   <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script> 
+	  
+	   <div style='overflow:hidden;height:600px;width:1000px;'>
+	   <div id='gmap_canvas' style='height:600px;width:1000px;'>
+	   </div>
+	   <div><small><a href="http://embedgooglemaps.com">
+	   embed google maps							</a></small></div>
+	   <div><small><a href="https://top10geeks.com/top-10-best-running-shoes-men-2016/">top 10 running shoes for men 2016</a></small></div>
+	   <style>#gmap_canvas img{max-width:none!important;background:none!important}</style>
+	   </div>
+	   <script type='text/javascript'>
+	   
+	   function init_map(){
+	   
+	   var Map = {};
+       var image = 'yellow_ship.png';	
+	   var myOptions = {zoom:15,center:new google.maps.LatLng(6.9270786,79.86124300000006),mapTypeId: google.maps.MapTypeId.ROADMAP};
+	   map = new google.maps.Map(document.getElementById('gmap_canvas'), myOptions);
+	   
+	   if ("WebSocket" in window){
+			console.log("browser has websockets");
+	   
+			var socket = new WebSocket('ws://localhost:9002');
+		
+			socket.onopen = setInterval(function()
+               {
+                  socket.send('hi');
+                 console.log("Message is sent...");
+               },3000);
+			   
+		
+			socket.onmessage = function(evt) {
+		
+			var message= evt.data;
+			console.log("Message is sent..."+message);
+			var json =[message];
+		    var json = JSON.parse(evt.data);
+		   
+
+            for(var i = 0; i < json.length; i++) {
+                var obj = json[i];
+				console.log(obj.latitude);
+				Map[obj.Ship_name] = [obj.latitude,obj.longitute];
+			}
+			
+              $.each( Map, function(index,value){
+			var lon=parseFloat(value[1]);
+			var lat=parseFloat(value[0]);
+			var myLatLng =  new google.maps.LatLng(lat,lon);
+			
+           	var marker = new google.maps.Marker({
+                position: myLatLng,
+				map: map,
+				icon: image
+     });
+	 
+	 infowindow = new google.maps.InfoWindow({content:index});
+	   google.maps.event.addListener(marker, 'click', function(){infowindow.open(map,marker);});
+	   infowindow.open(map,marker);
+	   
+			  console.log("Index = " + index + " value = " + value); 
+                              });
+
+	   }
+	   
+
+	else{
+		console.log("not supporting websockets");
+	}
+
+				   
+                  
+	
+						
+                          
+		   
+		  // console.log("oooo"+ jsonObject);
+		 // for (var i = 0, len = jsonObject.length; i < len; ++i) {
+     //    var student = jsonObject[0];
+		//	 console.log("oooo"+student);
+			  //console.log("oooo"+student.longitute);
+			//marker = new google.maps.Marker({map: map,position: new google.maps.LatLng(parseFloat(student.longitute),parseFloat(student.longitute))});
+			//marker = new google.maps.Marker({map: map,position: new google.maps.LatLng(parseFloat(jsonObject.latitude),parseFloat(jsonObject.longitute))});
+    // $("<div id=\"" + student.id + "\">" + student.full_name + " (" + student.user_id + " - " + student.stin + ")</div>")...
+ 
+	/*  var lon=parseFloat(student.longitute);
+		var lat=parseFloat(student.latitude);
+var myLatLng =  new google.maps.LatLng(lat,lon);
+			
+           	var marker = new google.maps.Marker({
+                position: myLatLng,
+				map: map,
+                title: data.Ship_name,
+				 icon: {
+      path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
+      scale: 4
+    }
+	       
+            });*/
+			
+		//	}
+			
+		//	infowindow = new google.maps.InfoWindow({content:'<strong>Title</strong><br>Colombo, Srilanka<br>'});
+	   //google.maps.event.addListener(marker, 'click', function(){infowindow.open(map,marker);});
+	   //infowindow.open(map,marker);
+            
+          };
+         //  marker = new google.maps.Marker({map: map,position: new google.maps.LatLng(parseFloat(jsonObject.latitude),parseFloat(jsonObject.longitute))});
+	}
+
+	   
+	   
+	   //google.maps.event.addDomListener(window, 'load', init_map);
+	   </script>
+      
+	  
+	  
+	   <script 
+      src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAGIWBf2DdI0KjJWW6Acjw0i0fGF4SKsro&callback=init_map" >
+    </script>
+       
+		
+    </div>
+    <div id="content_footer"></div>
+    <div id="footer">
+      
+    </div>
+  </div>
+   
+   
+</body>
+</html>
